@@ -12,7 +12,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/bmaupin/go-epub"
 	"github.com/chromedp/cdproto/network"
-	cs "github.com/jtagcat/composedscrape"
+	"github.com/jtagcat/util/scrape"
 	"github.com/urfave/cli/v2"
 )
 
@@ -37,14 +37,14 @@ var App = &cli.App{
 			return err
 		}
 
-		c := cs.InitScraper(&cs.Scraper{
+		c := scrape.InitScraper(ctx.Context, &scrape.Scraper{
 			Cookies: []*network.CookieParam{{
 				Name:   "sid",
 				Value:  ctx.String("cookie"),
 				Domain: pUrl.Host,
 			}},
 			Timeout: 30 * time.Second,
-		}, ctx.Context)
+		})
 
 		book, err := getMetadata(c, pUrl)
 		if err != nil {
@@ -105,7 +105,7 @@ type (
 	}
 )
 
-func getMetadata(c *cs.Scraper, pUrl *url.URL) (b Book, err error) {
+func getMetadata(c *scrape.Scraper, pUrl *url.URL) (b Book, err error) {
 	if !strings.HasPrefix(pUrl.Path, "/book/") {
 		return b, fmt.Errorf("URL format not recognized (expected /book/)")
 	}
@@ -124,7 +124,7 @@ func getMetadata(c *cs.Scraper, pUrl *url.URL) (b Book, err error) {
 		return b, err
 	}
 
-	for _, node := range cs.RawEach(s.Find("#book_id")) {
+	for _, node := range scrape.RawEach(s.Find("#book_id")) {
 		idS, ok := node.Attr("value")
 		if !ok {
 			return b, fmt.Errorf("book_id not found")
@@ -143,7 +143,7 @@ func getMetadata(c *cs.Scraper, pUrl *url.URL) (b Book, err error) {
 	return b, nil
 }
 
-func (book *Book) getChapters(c *cs.Scraper, rootURL string) error {
+func (book *Book) getChapters(c *scrape.Scraper, rootURL string) error {
 	s, _, err := c.Get(rootURL, "*")
 	if err != nil {
 		return err
@@ -191,7 +191,7 @@ func errIgnore[T any](a T, _ error) T {
 	return a
 }
 
-func (b *Book) chaptersPopulate(c *cs.Scraper, rootURL string) error {
+func (b *Book) chaptersPopulate(c *scrape.Scraper, rootURL string) error {
 	for i := range b.Chapters {
 		chap := &b.Chapters[i]
 
@@ -214,7 +214,7 @@ func (b *Book) chaptersPopulate(c *cs.Scraper, rootURL string) error {
 	return nil
 }
 
-func (b *Book) filesPopulate(c *cs.Scraper, rootPath string, e *epub.Epub) (_ error) {
+func (b *Book) filesPopulate(c *scrape.Scraper, rootPath string, e *epub.Epub) (_ error) {
 	for i := range b.Chapters {
 		chap := &b.Chapters[i]
 
@@ -223,7 +223,7 @@ func (b *Book) filesPopulate(c *cs.Scraper, rootPath string, e *epub.Epub) (_ er
 			return fmt.Errorf("chapter %d initializing goquery: %w", chap.Id, err)
 		}
 
-		for _, elem := range cs.RawEach(s.Find("*")) {
+		for _, elem := range scrape.RawEach(s.Find("*")) {
 			for i := range elem.Nodes[0].Attr {
 				attr := &elem.Nodes[0].Attr[i]
 

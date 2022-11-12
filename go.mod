@@ -3,14 +3,14 @@ module github.com/jtagcat/ellu-dl
 go 1.19
 
 require (
-	github.com/chromedp/cdproto v0.0.0-20221011223153-490dc4d81f7c
-	github.com/jtagcat/composedscrape v0.0.0-20221023173955-5d382e6d9b24
-	github.com/urfave/cli/v2 v2.20.3
+	github.com/chromedp/cdproto v0.0.0-20221108233440-fad8339618ab
+	github.com/jtagcat/util v0.0.0-20221112223935-c0d8b35c7b3e
+	github.com/urfave/cli/v2 v2.23.5
 )
 
 require (
 	github.com/gabriel-vasile/mimetype v1.4.1 // indirect
-	github.com/gofrs/uuid v4.3.0+incompatible // indirect
+	github.com/gofrs/uuid v4.3.1+incompatible // indirect
 	github.com/vincent-petithory/dataurl v1.0.0 // indirect
 )
 
@@ -29,6 +29,6 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
-	golang.org/x/net v0.1.0 // indirect
-	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/net v0.2.0 // indirect
+	golang.org/x/sys v0.2.0 // indirect
 )
