@@ -179,14 +179,6 @@ func (book *Book) getChapters(c *scrape.Scraper, rootURL string) error {
 	return nil
 }
 
-// strings.Cut, but starting from last character, found is either empty or seperator
-func revCut(s, sep string) (before, after string, found bool) {
-	if i := strings.LastIndex(s, sep); i >= 0 {
-		return s[:i], s[i+len(sep):], true
-	}
-	return s, "", false
-}
-
 func errIgnore[T any](a T, _ error) T {
 	return a
 }
