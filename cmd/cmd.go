@@ -106,11 +106,11 @@ type (
 )
 
 func getMetadata(c *scrape.Scraper, pUrl *url.URL) (b Book, err error) {
-	if !strings.HasPrefix(pUrl.Path, "/book/") {
-		return b, fmt.Errorf("URL format not recognized (expected /book/)")
+	if !strings.HasPrefix(pUrl.Path, "/books/") {
+		return b, fmt.Errorf("URL format not recognized (expected /books/)")
 	}
 
-	isbnS := strings.TrimPrefix(pUrl.Path, "/book/")
+	isbnS := strings.TrimPrefix(pUrl.Path, "/books/")
 	isbnS, _, _ = strings.Cut(isbnS, "/")
 	b.ISBN, err = strconv.Atoi(isbnS)
 	if err != nil {
